@@ -94,7 +94,9 @@ int main(int argc, char* argv[]) {
         std::cout << "Type of the shape: " << shape.getType() << std::endl;
         std::cout << "Area: " << shape.area() << std::endl;
         std::cout << "Perimeter: " << shape.circumference() << std::endl;
-        std::cout << "isConvex: " << shape.isConvex() << std::endl;
+        std::cout << "isConvex: "; shape.isConvex() ? (std::cout << "true" << std::endl) :
+        std::cout << "false" << std::endl;
+
         delete [] coordArr;
       }
 

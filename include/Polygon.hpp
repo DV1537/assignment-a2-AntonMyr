@@ -11,7 +11,7 @@ public:
   std::string getType();
   float area();
   float circumference();
-  float position();
+  Coordinate position();
   bool isConvex();
   float distance(Polygon s);
 

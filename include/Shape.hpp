@@ -9,6 +9,7 @@ class Shape {
   Coordinate *coordsArr;
   int pointCount;
   std::string typeOfShape;
+  Coordinate center;
 
  public:
   virtual std::string getType() = 0;

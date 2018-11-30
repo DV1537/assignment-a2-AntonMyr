@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cmath>
 #include "../include/Polygon.hpp"
 
 Polygon::Polygon(Coordinate *coords, int coordSize) {
@@ -56,6 +57,26 @@ float Polygon::circumference() {
   }
   return distance;
 }
+
+Coordinate Polygon::position() {
+  float minX, maxX, minY, maxY;
+
+  for(int i = 0; i < pointCount; i++) {
+    double x = coordsArr[i].getX();
+    double y = coordsArr[i].getY();
+    minX = fmin(minX, x);
+    maxX = fmax(maxX, x);
+    minY = fmin(minY, y);
+    maxY = fmax(maxY, y);    
+  }
+
+  float width = maxX - minX;
+  float height = maxY - minY;
+
+  center = {width/2, height/2};
+  return center;
+}
+
 float CrossProductLength(float Ax, float Ay, float Bx, float By, float Cx, float Cy)
 {
   float BAx = Ax - Bx;
@@ -65,6 +86,7 @@ float CrossProductLength(float Ax, float Ay, float Bx, float By, float Cx, float
 
   return (BAx * BCy - BAy * BCx);
 }
+
 bool Polygon::isConvex() {
     bool got_negative = false;
     bool got_positive = false;
