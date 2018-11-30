@@ -31,6 +31,18 @@ std::string Polygon::getType(){
 
 float Polygon::area() {
 
+  if(convexHasBeenRun) {
+    if(pointCount < 3 || !convex) {
+      return -1;
+    }
+  }
+  else{
+    isConvex();
+    if(pointCount < 3 || !convex) {
+      return -1;
+    }
+  }
+
   float area = 0;         // Accumulates area in the loop
   int j = pointCount-1;  // The last vertex is the 'previous' one to the first
   float xPts[pointCount];
@@ -53,25 +65,31 @@ float Polygon::area() {
 float Polygon::circumference() {
   float distance = 0;
   for(int i = 0; i < pointCount; i++) {
-    distance += coordsArr[i].distance(coordsArr[i+1]);
+    distance += coordsArr[i].distance(coordsArr[(i+1) % pointCount]);
   }
   return distance;
 }
 
 Coordinate Polygon::position() {
-  float minX, maxX, minY, maxY;
+  float minX = 0, maxX = 0, minY = 0, maxY = 0;
+  if(positionHasBeenRun)
+    return center;
 
   for(int i = 0; i < pointCount; i++) {
     double x = coordsArr[i].getX();
     double y = coordsArr[i].getY();
-    minX = fmin(minX, x);
-    maxX = fmax(maxX, x);
-    minY = fmin(minY, y);
-    maxY = fmax(maxY, y);    
+    if(x < minX)
+      minX = x;
+    if(x > maxX)
+      maxX = x;
+    if(y < minY)
+      minY = y;
+    if(y > maxY)
+      maxY = y;
   }
 
-  float width = maxX - minX;
-  float height = maxY - minY;
+  float width = maxX - abs(minX);
+  float height = maxY - abs(minY);
 
   center = {width/2, height/2};
   return center;
@@ -88,28 +106,46 @@ float CrossProductLength(float Ax, float Ay, float Bx, float By, float Cx, float
 }
 
 bool Polygon::isConvex() {
-    bool got_negative = false;
-    bool got_positive = false;
-    int B, C;
-    for (int A = 0; A < pointCount; A++)
-    {
-        B = (A + 1) % pointCount;
-        C = (B + 1) % pointCount;
+  if(convexHasBeenRun)
+    return convex;
 
-        float cross_product = CrossProductLength( coordsArr[A].getX(), coordsArr[A].getY(),
-                                                  coordsArr[B].getX(), coordsArr[B].getY(),
-                                                  coordsArr[C].getX(), coordsArr[C].getY());
-        if (cross_product < 0)
-        {
-            got_negative = true;
-        }
-        else if (cross_product > 0)
-        {
-            got_positive = true;
-        }
-        if (got_negative && got_positive) return false;
-    }
+  convexHasBeenRun = true;
+  bool got_negative = false;
+  bool got_positive = false;
+  int B, C;
+  for (int A = 0; A < pointCount; A++)
+  {
+      B = (A + 1) % pointCount;
+      C = (B + 1) % pointCount;
 
-    return true;
+      float cross_product = CrossProductLength( coordsArr[A].getX(), coordsArr[A].getY(),
+                                                coordsArr[B].getX(), coordsArr[B].getY(),
+                                                coordsArr[C].getX(), coordsArr[C].getY());
+      if (cross_product < 0)
+      {
+          got_negative = true;
+      }
+      else if (cross_product > 0)
+      {
+          got_positive = true;
+      }
+      if (got_negative && got_positive){
+        convex = false;
+        return false; 
+      }
+  }
+
+  convex = true;
+  return true;
 }
 
+float Polygon::distance(Polygon s) {
+  Coordinate centerS = s.position();
+  if(!center.getX())
+    position();
+
+  float distance = center.distance(centerS);
+
+  return distance;
+
+};

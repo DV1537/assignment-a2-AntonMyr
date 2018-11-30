@@ -5,6 +5,10 @@
 #include "Shape.hpp"
 
 class Polygon : public Shape {
+private:
+  bool convex;
+  bool convexHasBeenRun = false;
+  bool positionHasBeenRun = false;
 
 public:
   Polygon(Coordinate *coords, int coordsSize);

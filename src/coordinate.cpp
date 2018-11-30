@@ -16,6 +16,6 @@ float Coordinate::getY() {
 float Coordinate::distance(Coordinate d) {
   float dx = d.getX() - xVal;
   float dy = d.getY() - yVal;
-  float distance = sqrt(dx*dx + dy*dy);
+  float distance = std::hypot(dx, dy);
   return distance;
 };

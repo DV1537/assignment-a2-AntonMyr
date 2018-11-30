@@ -58,9 +58,9 @@ int main(int argc, char* argv[]) {
   std::string c;
   int badChars;
 
-
   int size;
   int coordSize;
+  int line = 0;
 
   float* floatsFromString;
 
@@ -71,39 +71,51 @@ int main(int argc, char* argv[]) {
   }
 
   readFile.open(argv[1]);
+  if(readFile.bad()) {
+    std::cout << "Could not open file" << std::endl;
+    exit(EXIT_FAILURE);
+  }
 
   while(std::getline(readFile, c)) {
-    std::cout << "Line: " << c << std::endl;
     badChars = numberOfBadChars(c);
-
-    if(badChars == 0) {
-      size = getFloatCount(c);
-      if(size % 2 == 0) {
-        coordSize = size/2;
-        floatsFromString = new float[size];
-        coordArr = new Coordinate[coordSize];
-        extractFloatsFromString(c, floatsFromString, size);
-        int i = 0;
-        while(i < coordSize) {
-          for(int j = 0; j < size; j+=2) {
-            coordArr[i] = {floatsFromString[j], floatsFromString[j+1]};
-            i++;
-          }
-        }
-        Polygon shape(coordArr, coordSize);
-        std::cout << "Type of the shape: " << shape.getType() << std::endl;
-        std::cout << "Area: " << shape.area() << std::endl;
-        std::cout << "Perimeter: " << shape.circumference() << std::endl;
-        std::cout << "isConvex: "; shape.isConvex() ? (std::cout << "true" << std::endl) :
-        std::cout << "false" << std::endl;
-
-        delete [] coordArr;
-      }
-
-    } else {
-      std::cout << "Sorry your file contains a bad charachter at position: " << badChars << std::endl;
+    line++;
+    if(badChars) {
+      std::cout << "Cannot read file, bad character at line " << line << ", position: " << badChars << std::endl;
+      exit(EXIT_FAILURE);
     }
+    if(c.length() < 1) {
+      std::cout << "Cannot read file, line " << line << " is empty" << badChars << std::endl;
+      exit(EXIT_FAILURE);
+    }
+  }
 
+  readFile.clear();
+  readFile.seekg(0, std::ios::beg);
+
+  while(std::getline(readFile, c)){
+    size = getFloatCount(c);
+    if(size % 2 == 0) {
+      coordSize = size/2;
+      floatsFromString = new float[size];
+      coordArr = new Coordinate[coordSize];
+      extractFloatsFromString(c, floatsFromString, size);
+      int i = 0;
+      while(i < coordSize) {
+        for(int j = 0; j < size; j+=2) {
+          coordArr[i] = {floatsFromString[j], floatsFromString[j+1]};
+          i++;
+        }
+      }
+      Polygon shape(coordArr, coordSize);
+      std::cout << "Type of the shape: " << shape.getType() << std::endl;
+      std::cout << "Area: " << shape.area() << std::endl;
+      std::cout << "Perimeter: " << shape.circumference() << std::endl;
+      std::cout << "isConvex: "; shape.isConvex() ? (std::cout << "true" << std::endl) :
+      std::cout << "false" << std::endl;
+      std::cout << "Position: (" << shape.position().getX() << ", " << shape.position().getY() << ")" << std::endl;
+
+      delete [] coordArr;
+    }
   }
 
   readFile.close();
