@@ -3,6 +3,13 @@
 #include <fstream>
 #include "../include/Coordinate.hpp"
 #include "../include/Polygon.hpp"
+
+/**
+ * Unsure if this library can be used, but I would argue that since it is a
+ * string stream it's part of strings. It's necessary for my solution reading
+ * the test files line by line and the only thing I'm using from it is the streaming
+ * operator (>>).
+ */
 #include <sstream>
 
 int numberOfBadChars (std::string &str) {
