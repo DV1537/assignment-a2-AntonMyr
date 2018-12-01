@@ -59,13 +59,7 @@ int main(int argc, char* argv[]) {
         }
       }
       Polygon shape(coordArr, coordSize);
-      std::cout << "Type of the shape: " << shape.getType() << std::endl;
       std::cout << "Area: " << shape.area() << std::endl;
-      std::cout << "Perimeter: " << shape.circumference() << std::endl;
-      std::cout << "isConvex: "; shape.isConvex() ? (std::cout << "true" << std::endl) :
-      std::cout << "false" << std::endl;
-      std::cout << "Position: (" << shape.position().getX() << ", " << shape.position().getY() << ")" << std::endl;
-
       delete [] coordArr;
     }
   }
