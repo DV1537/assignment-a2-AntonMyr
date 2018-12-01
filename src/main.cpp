@@ -3,55 +3,7 @@
 #include <fstream>
 #include "../include/Coordinate.hpp"
 #include "../include/Polygon.hpp"
-
-/**
- * Unsure if this library can be used, but I would argue that since it is a
- * string stream it's part of strings. It's necessary for my solution reading
- * the test files line by line and the only thing I'm using from it is the streaming
- * operator (>>).
- */
-#include <sstream>
-
-int numberOfBadChars (std::string &str) {
-  std::size_t found = str.find_first_not_of("0123456789.- ");
-  if (found!=std::string::npos)  {
-    return found;
-  }
-  return 0;
-}
-
-void extractFloatsFromString(std::string &str, float *floatArr, int size) {
-  std::stringstream ss;
-
-  float tempFloat;
-  std::string temp;
-
-  ss << str;
-
-  for(int i = 0; i < size; i++) {
-    ss >> temp;
-    if(std::stringstream(temp) >> tempFloat) {
-      floatArr[i] = tempFloat;
-    }
-  }
-}
-
-int getFloatCount(std::string &str) {
-  std::stringstream ss;
-
-  float isFloat;
-  int count = 0;
-  std::string temp;
-
-  ss << str;
-  while(!ss.eof()) {
-    ss >> temp;
-    if(std::stringstream(temp) >> isFloat) {
-      count++;
-    }
-  }
-  return count;
-}
+#include "../include/Functions.hpp"
 
 int main(int argc, char* argv[]) {
   std::ifstream readFile;
@@ -61,14 +13,6 @@ int main(int argc, char* argv[]) {
   int size;
   int coordSize;
   int line = 0;
-
-  Coordinate coordsTwo[4];
-  coordsTwo[0] = {1, 2};
-  coordsTwo[1] = {3, 2};
-  coordsTwo[2] = {4, 5};
-  coordsTwo[3] = {1, -5};
-
-  Polygon test(coordsTwo, 4);
 
   float* floatsFromString;
 
@@ -121,8 +65,6 @@ int main(int argc, char* argv[]) {
       std::cout << "isConvex: "; shape.isConvex() ? (std::cout << "true" << std::endl) :
       std::cout << "false" << std::endl;
       std::cout << "Position: (" << shape.position().getX() << ", " << shape.position().getY() << ")" << std::endl;
-      std::cout << "Position test: " << test.position().getX() << " " << test.position().getY() << std::endl;
-      std::cout << "Distance from shape to test: " << shape.distance(&test) << std::endl;
 
       delete [] coordArr;
     }

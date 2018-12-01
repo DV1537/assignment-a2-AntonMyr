@@ -25,6 +25,10 @@ Polygon::Polygon(Coordinate *coords, int coordSize) {
   }
 }
 
+Polygon::~Polygon() {
+  delete [] coordsArr;
+}
+
 std::string Polygon::getType(){
   return typeOfShape;
 }
@@ -64,14 +68,8 @@ float Polygon::area() {
 
 float Polygon::circumference() {
   float distance = 0;
-  float currentDistance;
-  float firstDistance = coordsArr[0].distance(coordsArr[(1)]);
   for(int i = 0; i < pointCount; i++) {
-    currentDistance = coordsArr[i].distance(coordsArr[(i+1) % pointCount]);
-    if(firstDistance != currentDistance)
-      regular = false;
-
-    distance += currentDistance;
+    distance += coordsArr[i].distance(coordsArr[(i+1) % pointCount]);
   }
   return distance;
 }
@@ -95,7 +93,6 @@ Coordinate Polygon::position() {
     if(y > maxY)
       maxY = y;
   }
-  // std::cout << "maxX: " << maxX << " minX: " << minX << std::endl;
 
   float width = maxX - abs(minX);
   float height = maxY - abs(minY);
@@ -103,7 +100,6 @@ Coordinate Polygon::position() {
   float centerWidth = (width/2) + minX;
   float centerHeight = (height/2) + minY;
 
-  // std::cout << "Width: " << width << " Height: " << height << " CenterWidth: " << centerWidth << " CenterHeight: " << centerHeight << std::endl;
   center = {centerWidth, centerHeight};
   return center;
 }
