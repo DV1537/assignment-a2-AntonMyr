@@ -19,6 +19,7 @@ public:
   Coordinate position();
   bool isConvex();
   float distance(Shape *s);
+  ~Polygon();
 
 };
 
