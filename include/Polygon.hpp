@@ -7,6 +7,7 @@
 class Polygon : public Shape {
 private:
   bool convex;
+  bool regular = true;
   bool convexHasBeenRun = false;
   bool positionHasBeenRun = false;
 
@@ -17,7 +18,7 @@ public:
   float circumference();
   Coordinate position();
   bool isConvex();
-  float distance(Polygon s);
+  float distance(Shape *s);
 
 };
 

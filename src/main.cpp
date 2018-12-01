@@ -62,6 +62,14 @@ int main(int argc, char* argv[]) {
   int coordSize;
   int line = 0;
 
+  Coordinate coordsTwo[4];
+  coordsTwo[0] = {1, 2};
+  coordsTwo[1] = {3, 2};
+  coordsTwo[2] = {4, 5};
+  coordsTwo[3] = {1, -5};
+
+  Polygon test(coordsTwo, 4);
+
   float* floatsFromString;
 
   Coordinate *coordArr;
@@ -113,6 +121,8 @@ int main(int argc, char* argv[]) {
       std::cout << "isConvex: "; shape.isConvex() ? (std::cout << "true" << std::endl) :
       std::cout << "false" << std::endl;
       std::cout << "Position: (" << shape.position().getX() << ", " << shape.position().getY() << ")" << std::endl;
+      std::cout << "Position test: " << test.position().getX() << " " << test.position().getY() << std::endl;
+      std::cout << "Distance from shape to test: " << shape.distance(&test) << std::endl;
 
       delete [] coordArr;
     }

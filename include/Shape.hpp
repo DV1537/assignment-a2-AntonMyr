@@ -15,9 +15,9 @@ class Shape {
   virtual std::string getType() = 0;
   float area();
   float circumference();
-  float position();
+  virtual Coordinate position() = 0;
   bool isConvex();
-  // float distance(Shape s);
+  virtual float distance(Shape *s) = 0;
 };
 
 #endif

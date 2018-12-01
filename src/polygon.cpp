@@ -43,10 +43,12 @@ float Polygon::area() {
     }
   }
 
-  float area = 0;         // Accumulates area in the loop
-  int j = pointCount-1;  // The last vertex is the 'previous' one to the first
+  float area = 0;
+  int j = pointCount-1;
+
   float xPts[pointCount];
   float yPts[pointCount];
+
   for(int i = 0; i < pointCount; i++) {
     xPts[i] = coordsArr[i].getX();
     yPts[i] = coordsArr[i].getY();
@@ -54,30 +56,36 @@ float Polygon::area() {
 
   for (int i=0; i < pointCount; i++){
     area += (xPts[j] + xPts[i]) * (yPts[j] - yPts[i]);
-    j = i;  //j is previous vertex to i
+    j = i;
   }
-
-
 
   return area/2;
 }
 
 float Polygon::circumference() {
   float distance = 0;
+  float currentDistance;
+  float firstDistance = coordsArr[0].distance(coordsArr[(1)]);
   for(int i = 0; i < pointCount; i++) {
-    distance += coordsArr[i].distance(coordsArr[(i+1) % pointCount]);
+    currentDistance = coordsArr[i].distance(coordsArr[(i+1) % pointCount]);
+    if(firstDistance != currentDistance)
+      regular = false;
+
+    distance += currentDistance;
   }
   return distance;
 }
 
 Coordinate Polygon::position() {
-  float minX = 0, maxX = 0, minY = 0, maxY = 0;
+  float initialX = coordsArr[0].getX();
+  float initialY = coordsArr[0].getY();
+  float minX = initialX, maxX = initialX, minY = initialY, maxY = initialY;
   if(positionHasBeenRun)
     return center;
 
   for(int i = 0; i < pointCount; i++) {
-    double x = coordsArr[i].getX();
-    double y = coordsArr[i].getY();
+    float x = coordsArr[i].getX();
+    float y = coordsArr[i].getY();
     if(x < minX)
       minX = x;
     if(x > maxX)
@@ -87,11 +95,16 @@ Coordinate Polygon::position() {
     if(y > maxY)
       maxY = y;
   }
+  // std::cout << "maxX: " << maxX << " minX: " << minX << std::endl;
 
   float width = maxX - abs(minX);
   float height = maxY - abs(minY);
 
-  center = {width/2, height/2};
+  float centerWidth = (width/2) + minX;
+  float centerHeight = (height/2) + minY;
+
+  // std::cout << "Width: " << width << " Height: " << height << " CenterWidth: " << centerWidth << " CenterHeight: " << centerHeight << std::endl;
+  center = {centerWidth, centerHeight};
   return center;
 }
 
@@ -139,9 +152,9 @@ bool Polygon::isConvex() {
   return true;
 }
 
-float Polygon::distance(Polygon s) {
-  Coordinate centerS = s.position();
-  if(!center.getX())
+float Polygon::distance(Shape *s) {
+  Coordinate centerS = s->position();
+  if(!positionHasBeenRun)
     position();
 
   float distance = center.distance(centerS);
