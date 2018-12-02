@@ -63,7 +63,8 @@ float Polygon::area() {
     j = i;
   }
 
-  return area/2;
+  return std::abs(area/2);
+
 }
 
 float Polygon::circumference() {
